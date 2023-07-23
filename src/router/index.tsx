@@ -35,7 +35,7 @@ function RouterPage() {
           element={
             <GuardedRoute
               isRouteAccessible={!isAuthenticated}
-              redirectRoute="/home"
+              redirectRoute="/"
             />
           }
         >
@@ -50,7 +50,7 @@ function RouterPage() {
             />
           }
         >
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
         </Route>
 
         <Route
