@@ -1,7 +1,8 @@
 import useAuth from "../composables/useAuth";
+import GoogleButton from "react-google-button";
 
 const LoginPage: React.FC = () => {
-  const { googleLogin, logout, userInfo } = useAuth();
+  const { googleLogin } = useAuth();
 
   const onGoogleLogin = () => {
     googleLogin()
@@ -13,22 +14,11 @@ const LoginPage: React.FC = () => {
       });
   };
 
-  const onLogout = () => {
-    logout()
-      .then(() => {
-        return;
-      })
-      .catch(() => {
-        return;
-      });
-  };
   return (
     <>
       <div>
-        Login Page <button onClick={onGoogleLogin}>Login With Google</button>
-        <button onClick={onLogout}>Logout</button>
+        <GoogleButton onClick={onGoogleLogin}></GoogleButton>
       </div>
-      <pre>{userInfo?.displayName}</pre>
     </>
   );
 };
