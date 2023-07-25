@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faSignOut } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useAuth from "../../composables/useAuth";
 
@@ -18,6 +19,7 @@ const LogoText = styled.div`
   color: #efe1d1;
   text-transform: uppercase;
   letter-spacing: 4px;
+  cursor: pointer;
 `;
 
 const LogoSpan = styled.span`
@@ -33,7 +35,6 @@ const ProfileLogo = styled.div`
   font-family: "Noto Sans", sans-serif;
   width: 40px;
   height: 40px;
-  cursor: pointer;
 `;
 
 const ProfileDropdown = styled.div`
@@ -56,6 +57,7 @@ const UserData = styled.div`
 const UserImage = styled.img`
   width: 40px;
   height: 40px;
+  cursor: pointer;
 `;
 
 const UserName = styled.div`
@@ -77,6 +79,7 @@ const LogoutButton = styled.div`
 const NavbarComponent: React.FC = () => {
   const { userInfo, logout } = useAuth();
   const [dropdown, setDropdown] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdown(!dropdown);
@@ -93,10 +96,14 @@ const NavbarComponent: React.FC = () => {
       });
   };
 
+  const goHome = () => {
+    navigate("/");
+  };
+
   return (
     <>
       <NavbarContainer>
-        <LogoText>
+        <LogoText onClick={goHome}>
           <LogoSpan>O</LogoSpan>ur <LogoSpan>C</LogoSpan>ode
         </LogoText>
         {userInfo ? (

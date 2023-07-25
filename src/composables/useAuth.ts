@@ -36,7 +36,7 @@ const useAuth = (): AuthResult => {
       if (user) {
         const userData: UserModel = {
           displayName: user?.displayName ?? null,
-          photoURL: user?.photoURL ?? null,
+          photoURL: user?.photoURL ?? undefined,
           email: user?.email ?? null,
         };
         setUserInfo(userData);

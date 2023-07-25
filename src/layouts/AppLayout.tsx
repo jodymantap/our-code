@@ -16,30 +16,8 @@ const GlobalStyle = createGlobalStyle<GlobalStyleProps>`
     color: #fff;
     font-family: 'Noto Sans', sans-serif;
   }
+`;
 
-  @keyframes twinkling {
-    0% {
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
-
-  @keyframes shootingStar {
-    from {
-      opacity: 1;
-      left: -10%;
-    }
-    to {
-      opacity: 0;
-      left: 110%;
-    }
-  }
-  `;
 const BackgroundContainer = styled.div`
   position: fixed;
   top: 0;
