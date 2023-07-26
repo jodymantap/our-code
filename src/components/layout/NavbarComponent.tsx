@@ -46,6 +46,7 @@ const ProfileDropdown = styled.div`
   position: fixed;
   right: 32px;
   top: 70px;
+  z-index: 2;
 `;
 
 const UserData = styled.div`

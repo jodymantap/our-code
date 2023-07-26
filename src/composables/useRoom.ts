@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
 import { db } from "../config/firebase";
 import { auth } from "../config/firebase";
-import { collection, getDocs, where, query, orderBy } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  where,
+  query,
+  onSnapshot,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { RoomModel } from "../interfaces/room";
 
 const useRoom = () => {
   const [rooms, setRooms] = useState<RoomModel[]>();
+  const [roomData, setRoomData] = useState<RoomModel | null>(null);
 
   useEffect(() => {
     const getAllRooms = async () => {
@@ -53,7 +62,51 @@ const useRoom = () => {
     return () => unsubscribe();
   }, []);
 
-  return { rooms };
+  const enterRoom = (roomID: string) => {
+    const roomReference = collection(db, "coderoom");
+    const localId = auth.currentUser?.uid;
+    const photoURL = auth.currentUser?.photoURL;
+    const displayName = auth.currentUser?.displayName;
+    const unsubscribe = onSnapshot(
+      query(
+        roomReference,
+        where("room_member", "array-contains", {
+          local_id: localId,
+          display_name: displayName,
+          photo_url: photoURL,
+        }),
+        where("__name__", "==", roomID)
+      ),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const roomSnapshot = snapshot.docs[0];
+          setRoomData({
+            id: roomSnapshot.id,
+            ...roomSnapshot.data(),
+          } as RoomModel);
+        } else {
+          setRoomData(null);
+        }
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  };
+
+  const updateCode = async (code: string, roomID: string) => {
+    const roomReference = doc(db, "coderoom", roomID);
+    try {
+      const response = await updateDoc(roomReference, { code: code });
+      return response;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  };
+
+  return { rooms, roomData, enterRoom, updateCode };
 };
 
 export default useRoom;
