@@ -10,11 +10,14 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { RoomModel } from "../interfaces/room";
+import { Member, RoomModel } from "../interfaces/room";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../state/store";
 
 const useRoom = () => {
   const [rooms, setRooms] = useState<RoomModel[]>();
   const [roomData, setRoomData] = useState<RoomModel | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const getAllRooms = async () => {
@@ -84,6 +87,8 @@ const useRoom = () => {
             id: roomSnapshot.id,
             ...roomSnapshot.data(),
           } as RoomModel);
+          const members = roomSnapshot.data().room_member as Member[];
+          dispatch({ type: "PUSH_MEMBER", payload: members });
         } else {
           setRoomData(null);
         }

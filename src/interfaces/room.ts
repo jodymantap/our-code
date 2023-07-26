@@ -1,7 +1,7 @@
-type Member = {
+export type Member = {
   display_name: string | null;
   local_id: string | null;
-  photo_url: string | null;
+  photo_url: string | undefined;
 };
 
 export interface RoomModel {

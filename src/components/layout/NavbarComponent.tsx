@@ -4,6 +4,7 @@ import { faUser, faSignOut } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useAuth from "../../composables/useAuth";
+import MemberList from "./MemberList";
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -107,6 +108,7 @@ const NavbarComponent: React.FC = () => {
         <LogoText onClick={goHome}>
           <LogoSpan>O</LogoSpan>ur <LogoSpan>C</LogoSpan>ode
         </LogoText>
+        <MemberList />
         {userInfo ? (
           <UserImage src={userInfo?.photoURL} onClick={toggleDropdown} />
         ) : (

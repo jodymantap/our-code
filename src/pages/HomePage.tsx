@@ -1,7 +1,7 @@
 import { Formik, Field, Form, FieldProps } from "formik";
 import styled from "styled-components";
 import * as yup from "yup";
-import RoomList from "../components/layout/RoomList";
+import RoomList from "../components/RoomList";
 interface MyFormValues {
   roomName: string;
 }

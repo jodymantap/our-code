@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import useRoom from "../../composables/useRoom";
+import useRoom from "../composables/useRoom";
 import { useNavigate } from "react-router-dom";
 
 const RoomListItem = styled.div`
