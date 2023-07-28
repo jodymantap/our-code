@@ -31,7 +31,7 @@ const RoomList: React.FC = () => {
   return (
     <>
       {rooms?.map((room) => (
-        <RoomListItem onClick={() => enterRoom(room?.id)} key={room?.id}>
+        <RoomListItem onClick={() => enterRoom(room?.id as string)} key={room?.id}>
           {room?.room_name}
         </RoomListItem>
       ))}

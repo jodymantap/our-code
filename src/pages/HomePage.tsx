@@ -1,7 +1,10 @@
 import { Formik, Field, Form, FieldProps } from "formik";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as yup from "yup";
 import RoomList from "../components/RoomList";
+import useRoom from "../composables/useRoom";
+
 interface MyFormValues {
   roomName: string;
 }
@@ -51,8 +54,19 @@ const ErrorContainer = styled.div`
 `;
 
 const HomePage: React.FC = () => {
+  const { createNewRoom } = useRoom();
+  const navigate = useNavigate();
+
   const createRoom = (values: MyFormValues) => {
-    console.log(values);
+    createNewRoom(values.roomName)
+      .then((res) => {
+        if (res) {
+          navigate(`room/${res.id}`);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const validationSchema = yup.object({

@@ -9,6 +9,8 @@ import {
   onSnapshot,
   doc,
   updateDoc,
+  serverTimestamp,
+  addDoc,
 } from "firebase/firestore";
 import { Member, RoomModel } from "../interfaces/room";
 import { useDispatch } from "react-redux";
@@ -111,7 +113,30 @@ const useRoom = () => {
     }
   };
 
-  return { rooms, roomData, enterRoom, updateCode };
+  const createNewRoom = async (roomName: string) => {
+    const roomReference = collection(db, "coderoom");
+    const localId = auth.currentUser?.uid;
+    const photoURL = auth.currentUser?.photoURL;
+    const displayName = auth.currentUser?.displayName;
+    const body: RoomModel = {
+      room_name: roomName,
+      code: 'console.log("Hello World")',
+      room_member: [
+        { display_name: displayName, local_id: localId, photo_url: photoURL },
+      ],
+      created_at: serverTimestamp(),
+    };
+
+    try {
+      const response = await addDoc(roomReference, body);
+      return response;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  };
+
+  return { rooms, roomData, enterRoom, updateCode, createNewRoom };
 };
 
 export default useRoom;
