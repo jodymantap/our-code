@@ -102,6 +102,11 @@ const useRoom = () => {
     };
   };
 
+  const leaveRoom = () => {
+    setRoomData(null);
+    dispatch({ type: "PUSH_MEMBER", payload: [] });
+  };
+
   const updateCode = async (code: string, roomID: string) => {
     const roomReference = doc(db, "coderoom", roomID);
     try {
@@ -136,7 +141,7 @@ const useRoom = () => {
     }
   };
 
-  return { rooms, roomData, enterRoom, updateCode, createNewRoom };
+  return { rooms, roomData, enterRoom, updateCode, createNewRoom, leaveRoom };
 };
 
 export default useRoom;

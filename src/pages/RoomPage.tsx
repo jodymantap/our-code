@@ -7,7 +7,7 @@ import useRoom from "../composables/useRoom";
 
 const RoomPage: React.FC = () => {
   const { roomID } = useParams();
-  const { roomData, enterRoom, updateCode } = useRoom();
+  const { roomData, enterRoom, updateCode, leaveRoom } = useRoom();
 
   type DebouncedFn = (args: string) => void;
 
@@ -43,6 +43,10 @@ const RoomPage: React.FC = () => {
   useEffect(() => {
     if (prevRoomID.current) {
       prevEnterRoom.current?.(prevRoomID.current);
+    }
+
+    return () => {
+      leaveRoom()
     }
   }, []);
 
