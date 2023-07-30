@@ -1,7 +1,9 @@
 import useAuth from "../composables/useAuth";
 import GoogleButton from "react-google-button";
+import usePageTitle from "../composables/usePageTitle";
 
 const LoginPage: React.FC = () => {
+  usePageTitle("Our Code - Login");
   const { googleLogin } = useAuth();
 
   const onGoogleLogin = () => {

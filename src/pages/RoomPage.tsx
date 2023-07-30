@@ -4,10 +4,12 @@ import { javascript, autoCloseTags } from "@codemirror/lang-javascript";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import CodeMirror from "@uiw/react-codemirror";
 import useRoom from "../composables/useRoom";
+import usePageTitle from "../composables/usePageTitle";
 
 const RoomPage: React.FC = () => {
   const { roomID } = useParams();
   const { roomData, enterRoom, updateCode, leaveRoom } = useRoom();
+  usePageTitle(`Our Code - Room`);
 
   type DebouncedFn = (args: string) => void;
 
@@ -46,8 +48,8 @@ const RoomPage: React.FC = () => {
     }
 
     return () => {
-      leaveRoom()
-    }
+      leaveRoom();
+    };
   }, []);
 
   return (

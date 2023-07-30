@@ -4,6 +4,7 @@ import styled from "styled-components";
 import * as yup from "yup";
 import RoomList from "../components/RoomList";
 import useRoom from "../composables/useRoom";
+import usePageTitle from "../composables/usePageTitle";
 
 interface MyFormValues {
   roomName: string;
@@ -54,6 +55,7 @@ const ErrorContainer = styled.div`
 `;
 
 const HomePage: React.FC = () => {
+  usePageTitle("Our Code - Home");
   const { createNewRoom } = useRoom();
   const navigate = useNavigate();
 
