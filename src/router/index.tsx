@@ -23,7 +23,7 @@ function RouterPage() {
   if (loading) {
     return (
       <>
-        <LoadingComponent />
+        <LoadingComponent size="6x" />
       </>
     );
   }

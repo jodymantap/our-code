@@ -5,6 +5,8 @@ import * as yup from "yup";
 import RoomList from "../components/RoomList";
 import useRoom from "../composables/useRoom";
 import usePageTitle from "../composables/usePageTitle";
+import { useState } from "react";
+import LoadingComponent from "../components/LoadingComponent";
 
 interface MyFormValues {
   roomName: string;
@@ -58,15 +60,19 @@ const HomePage: React.FC = () => {
   usePageTitle("Our Code - Home");
   const { createNewRoom } = useRoom();
   const navigate = useNavigate();
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
 
   const createRoom = (values: MyFormValues) => {
+    setButtonLoading(true);
     createNewRoom(values.roomName)
       .then((res) => {
         if (res) {
+          setButtonLoading(false);
           navigate(`room/${res.id}`);
         }
       })
       .catch((err) => {
+        setButtonLoading(false);
         console.log(err);
       });
   };
@@ -97,7 +103,13 @@ const HomePage: React.FC = () => {
               )}
             </Field>
             <br />
-            <SubmitButton type="submit">Create Room</SubmitButton>
+            <SubmitButton disabled={buttonLoading} type="submit">
+              {buttonLoading ? (
+                <LoadingComponent size="lg" />
+              ) : (
+                <div>Create Room</div>
+              )}
+            </SubmitButton>
           </FormContainer>
         </Form>
       </Formik>

@@ -1,6 +1,26 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import useRoom from "../composables/useRoom";
 import { useNavigate } from "react-router-dom";
+import LoadingComponent from "./LoadingComponent";
+
+const bounceAnimation = keyframes`
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }`;
+
+const RoomListLoading = styled.div`
+  background-color: #3f2e3e;
+  color: #efe1d1;
+  text-align: center;
+  padding: 8px;
+  animation: ${bounceAnimation} 2s infinite;
+`;
 
 const RoomListContainer = styled.div`
   margin-top: 8px;
@@ -37,14 +57,20 @@ const RoomList: React.FC = () => {
   return (
     <>
       <RoomListContainer>
-        {rooms?.map((room) => (
-          <RoomListItem
-            onClick={() => enterRoom(room?.id as string)}
-            key={room?.id}
-          >
-            {room?.room_name}
-          </RoomListItem>
-        ))}
+        {rooms?.length ? (
+          rooms?.map((room) => (
+            <RoomListItem
+              onClick={() => enterRoom(room?.id as string)}
+              key={room?.id}
+            >
+              {room?.room_name}
+            </RoomListItem>
+          ))
+        ) : (
+          <RoomListLoading>
+            <LoadingComponent size="xl" />
+          </RoomListLoading>
+        )}
       </RoomListContainer>
     </>
   );
