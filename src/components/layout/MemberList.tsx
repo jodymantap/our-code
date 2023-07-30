@@ -21,7 +21,7 @@ const MemberList: React.FC = () => {
     <>
       <MemberListContainer>
         {members?.map((member, index) => (
-          <MemberListItem key={index} src={member.photo_url} />
+          <MemberListItem key={index} src={member.photo_url ?? undefined} />
         ))}
       </MemberListContainer>
     </>

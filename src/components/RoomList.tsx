@@ -2,6 +2,12 @@ import styled from "styled-components";
 import useRoom from "../composables/useRoom";
 import { useNavigate } from "react-router-dom";
 
+const RoomListContainer = styled.div`
+  margin-top: 8px;
+  height: 150px;
+  overflow: scroll;
+`;
+
 const RoomListItem = styled.div`
   background-color: #3f2e3e;
   padding: 12px;
@@ -11,7 +17,7 @@ const RoomListItem = styled.div`
   &:hover {
     background-color: #4f3c4e;
   }
-  margin-top: 8px;
+  margin-bottom: 8px;
   font-family: "Tektur", cursive;
   font-size: 12px;
 `;
@@ -30,11 +36,16 @@ const RoomList: React.FC = () => {
 
   return (
     <>
-      {rooms?.map((room) => (
-        <RoomListItem onClick={() => enterRoom(room?.id as string)} key={room?.id}>
-          {room?.room_name}
-        </RoomListItem>
-      ))}
+      <RoomListContainer>
+        {rooms?.map((room) => (
+          <RoomListItem
+            onClick={() => enterRoom(room?.id as string)}
+            key={room?.id}
+          >
+            {room?.room_name}
+          </RoomListItem>
+        ))}
+      </RoomListContainer>
     </>
   );
 };
