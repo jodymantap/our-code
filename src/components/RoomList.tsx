@@ -2,6 +2,7 @@ import styled, { keyframes } from "styled-components";
 import useRoom from "../composables/useRoom";
 import { useNavigate } from "react-router-dom";
 import LoadingComponent from "./LoadingComponent";
+import toast from "react-hot-toast";
 
 const bounceAnimation = keyframes`
   0%, 20%, 50%, 80%, 100% {
@@ -50,7 +51,7 @@ const RoomList: React.FC = () => {
     if (id) {
       navigate(`room/${id}`);
     } else {
-      console.log("Invalid room ID");
+      toast.error("Invalid Room ID");
     }
   };
 

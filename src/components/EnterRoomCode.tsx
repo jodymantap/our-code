@@ -4,11 +4,11 @@ import * as yup from "yup";
 import LoadingComponent from "../components/LoadingComponent";
 
 interface MyFormValues {
-  roomName: string;
+  roomCode: string;
 }
 
 interface ComponentProps {
-  createRoom: (values: MyFormValues) => void;
+  enterRoomCode: (values: MyFormValues) => void;
   toggleFormState: (values: string) => void;
   buttonLoading: boolean;
 }
@@ -65,34 +65,34 @@ const ToggleFormLink = styled.p`
   font-size: 12px;
 `;
 
-const CreateNewRoom: React.FC<ComponentProps> = ({
-  createRoom,
+const EnterRoomCode: React.FC<ComponentProps> = ({
+  enterRoomCode,
   toggleFormState,
   buttonLoading,
 }) => {
   const validationSchema = yup.object({
-    roomName: yup
+    roomCode: yup
       .string()
-      .required("Room Name is required")
-      .matches(/^[a-zA-Z0-9]+$/, "Invalid Room Name format")
-      .label("Room Name"),
+      .required("Room Code is required")
+      .matches(/^[a-zA-Z0-9]+$/, "Invalid Room Code format")
+      .label("Room Code"),
   });
   return (
     <>
       <Formik
         validationSchema={validationSchema}
-        initialValues={{ roomName: "" }}
+        initialValues={{ roomCode: "" }}
         onSubmit={(values, actions) => {
-          createRoom(values);
+          enterRoomCode(values);
           actions.setSubmitting(false);
         }}
       >
         <Form>
           <FormContainer>
-            <Field name="roomName">
+            <Field name="roomCode">
               {({ field, meta }: FieldProps) => (
                 <>
-                  <InputField {...field} placeholder="Input new room name" />
+                  <InputField {...field} placeholder="Input a room code" />
                   <ErrorContainer>
                     {meta.error ? meta.error + "!" : ""}
                   </ErrorContainer>
@@ -104,11 +104,11 @@ const CreateNewRoom: React.FC<ComponentProps> = ({
               {buttonLoading ? (
                 <LoadingComponent size="lg" />
               ) : (
-                <div>Create Room</div>
+                <div>Enter Room</div>
               )}
             </SubmitButton>
-            <ToggleFormLink onClick={() => toggleFormState("enter")}>
-              Or enter a room code
+            <ToggleFormLink onClick={() => toggleFormState("create")}>
+              Or create a new room
             </ToggleFormLink>
           </FormContainer>
         </Form>
@@ -117,4 +117,4 @@ const CreateNewRoom: React.FC<ComponentProps> = ({
   );
 };
 
-export default CreateNewRoom;
+export default EnterRoomCode;

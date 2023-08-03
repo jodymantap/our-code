@@ -11,10 +11,13 @@ import {
   updateDoc,
   serverTimestamp,
   addDoc,
+  runTransaction,
+  Transaction,
 } from "firebase/firestore";
 import { Member, RoomModel } from "../interfaces/room";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../state/store";
+import toast from "react-hot-toast";
 
 const useRoom = () => {
   const [rooms, setRooms] = useState<RoomModel[]>();
@@ -145,6 +148,48 @@ const useRoom = () => {
     }
   };
 
+  const enterRoomCode = async (roomCode: string) => {
+    const roomReference = doc(db, "coderoom", roomCode);
+    const localId = auth.currentUser?.uid;
+    const photoURL = auth.currentUser?.photoURL;
+    const displayName = auth.currentUser?.displayName;
+
+    try {
+      await runTransaction(db, async (transaction: Transaction) => {
+        const roomDoc = await transaction.get(roomReference);
+
+        if (!roomDoc.exists()) {
+          return Promise.reject("Invalid Room Code!");
+        }
+
+        const roomData = roomDoc.data();
+        const currentUserExists = roomData?.room_member.some(
+          (user: Record<string, unknown>) => {
+            return user.local_id === localId;
+          }
+        );
+
+        if (!currentUserExists) {
+          const currentUserData = {
+            local_id: localId,
+            display_name: displayName,
+            photo_url: photoURL,
+          };
+          transaction.update(roomReference, {
+            room_member: [...roomData.room_member, currentUserData],
+          });
+
+          toast.success("User added to the room successfully.");
+        } else {
+          toast.error("User already exists in the room.");
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  };
+
   return {
     rooms,
     roomData,
@@ -153,6 +198,7 @@ const useRoom = () => {
     createNewRoom,
     leaveRoom,
     roomsLoading,
+    enterRoomCode,
   };
 };
 

@@ -4,19 +4,24 @@ import RoomList from "../components/RoomList";
 import useRoom from "../composables/useRoom";
 import usePageTitle from "../composables/usePageTitle";
 import CreateNewRoom from "../components/CreateNewRoom";
+import EnterRoomCode from "../components/EnterRoomCode";
 
 const HomePage: React.FC = () => {
   usePageTitle("Our Code - Home");
-  const { createNewRoom } = useRoom();
+  const { createNewRoom, enterRoomCode } = useRoom();
   const navigate = useNavigate();
   const [formState, setFormState] = useState<string>("create");
   const [buttonLoading, setButtonLoading] = useState<boolean>(false);
 
-  interface MyFormValues {
+  interface MyCreateFormValues {
     roomName: string;
   }
 
-  const createRoom = (values: MyFormValues) => {
+  interface MyEnterFormValues {
+    roomCode: string;
+  }
+
+  const createRoom = (values: MyCreateFormValues) => {
     setButtonLoading(true);
     createNewRoom(values.roomName)
       .then((res) => {
@@ -27,7 +32,19 @@ const HomePage: React.FC = () => {
       })
       .catch((err) => {
         setButtonLoading(false);
-        console.log(err);
+        return err;
+      });
+  };
+
+  const enterExistingRoomCode = (values: MyEnterFormValues) => {
+    setButtonLoading(true);
+    enterRoomCode(values.roomCode)
+      .then(() => {
+        setButtonLoading(false);
+      })
+      .catch((err) => {
+        setButtonLoading(false);
+        return err;
       });
   };
 
@@ -43,7 +60,13 @@ const HomePage: React.FC = () => {
           toggleFormState={toggleFormState}
           buttonLoading={buttonLoading}
         />
-      ) : null}
+      ) : (
+        <EnterRoomCode
+          enterRoomCode={enterExistingRoomCode}
+          toggleFormState={toggleFormState}
+          buttonLoading={buttonLoading}
+        />
+      )}
       <RoomList />
     </>
   );

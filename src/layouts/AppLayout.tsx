@@ -5,6 +5,7 @@ import styled, {
   ThemeProvider,
 } from "styled-components";
 import NavbarComponent from "../components/layout/NavbarComponent";
+import { Toaster } from "react-hot-toast";
 
 type GlobalStyleProps = DefaultTheme;
 
@@ -60,6 +61,7 @@ const ChildrenContainer = styled.div`
 const AppLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <ThemeProvider theme={{}}>
+      <Toaster />
       <GlobalStyle />
       <BackgroundContainer />
       <NavbarComponent />
