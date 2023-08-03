@@ -18,11 +18,13 @@ import { AppDispatch } from "../state/store";
 
 const useRoom = () => {
   const [rooms, setRooms] = useState<RoomModel[]>();
+  const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [roomData, setRoomData] = useState<RoomModel | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const getAllRooms = async () => {
+      setRoomsLoading(true);
       const roomReference = collection(db, "coderoom");
       const localId = auth.currentUser?.uid;
       const photoURL = auth.currentUser?.photoURL;
@@ -50,6 +52,8 @@ const useRoom = () => {
       } catch (err) {
         setRooms([]);
         throw err;
+      } finally {
+        setRoomsLoading(false);
       }
     };
 
@@ -141,7 +145,15 @@ const useRoom = () => {
     }
   };
 
-  return { rooms, roomData, enterRoom, updateCode, createNewRoom, leaveRoom };
+  return {
+    rooms,
+    roomData,
+    enterRoom,
+    updateCode,
+    createNewRoom,
+    leaveRoom,
+    roomsLoading,
+  };
 };
 
 export default useRoom;

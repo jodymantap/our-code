@@ -43,7 +43,7 @@ const RoomListItem = styled.div`
 `;
 
 const RoomList: React.FC = () => {
-  const { rooms } = useRoom();
+  const { rooms, roomsLoading } = useRoom();
   const navigate = useNavigate();
 
   const enterRoom = (id: string | null) => {
@@ -57,7 +57,11 @@ const RoomList: React.FC = () => {
   return (
     <>
       <RoomListContainer>
-        {rooms?.length ? (
+        {roomsLoading ? (
+          <RoomListLoading>
+            <LoadingComponent size="xl" />
+          </RoomListLoading>
+        ) : (
           rooms?.map((room) => (
             <RoomListItem
               onClick={() => enterRoom(room?.id as string)}
@@ -66,10 +70,6 @@ const RoomList: React.FC = () => {
               {room?.room_name}
             </RoomListItem>
           ))
-        ) : (
-          <RoomListLoading>
-            <LoadingComponent size="xl" />
-          </RoomListLoading>
         )}
       </RoomListContainer>
     </>
