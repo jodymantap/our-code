@@ -159,7 +159,7 @@ const useRoom = () => {
         const roomDoc = await transaction.get(roomReference);
 
         if (!roomDoc.exists()) {
-          return Promise.reject("Invalid Room Code!");
+          toast.error("Invalid room code.");
         }
 
         const roomData = roomDoc.data();
@@ -176,7 +176,7 @@ const useRoom = () => {
             photo_url: photoURL,
           };
           transaction.update(roomReference, {
-            room_member: [...roomData.room_member, currentUserData],
+            room_member: [...roomData?.room_member, currentUserData],
           });
 
           toast.success("User added to the room successfully.");
