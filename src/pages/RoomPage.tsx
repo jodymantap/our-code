@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { javascript, autoCloseTags } from "@codemirror/lang-javascript";
 import { dracula } from "@uiw/codemirror-theme-dracula";
@@ -17,6 +17,15 @@ const RoomPage: React.FC = () => {
   const prevRoomID = useRef<string | undefined>(roomID);
   const prevUpdateCode = useRef<typeof updateCode | undefined>(updateCode);
   const prevEnterRoom = useRef<typeof enterRoom | undefined>(enterRoom);
+  const codeMirrorRef = useRef<any>();
+
+  const [cursor, setCursor] = useState<number>(0);
+
+  const handleOnChange = (value: string) => {
+    const cursorPosition = handleCursorPosition();
+    setCursor(cursorPosition);
+    debouncedCodeChanges.current?.(value);
+  };
 
   useEffect(() => {
     const debounce = (fn: DebouncedFn, delay: number) => {
@@ -39,7 +48,7 @@ const RoomPage: React.FC = () => {
         .catch((err) => {
           throw err;
         });
-    }, 800);
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -52,16 +61,39 @@ const RoomPage: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (roomData) {
+      handleRestoreCursorPosition(cursor);
+    }
+  }, [roomData]);
+
+  const handleCursorPosition = () => {
+    if (codeMirrorRef.current) {
+      const cursor = codeMirrorRef.current.view.state.selection.ranges[0].from;
+      return cursor;
+    }
+  };
+
+  const handleRestoreCursorPosition = (position: number) => {
+    if (codeMirrorRef.current) {
+      const view = codeMirrorRef.current.view;
+
+      view.dispatch({ selection: { anchor: position } });
+      view.focus();
+    }
+  };
+
   return (
     <>
       <CodeMirror
+        ref={codeMirrorRef}
         value={roomData?.code || ""}
         height="70vh"
         width="80vw"
         extensions={[javascript({ jsx: true }), autoCloseTags]}
         theme={dracula}
         onChange={(value) => {
-          debouncedCodeChanges.current?.(value);
+          handleOnChange(value);
         }}
       />
     </>
