@@ -68,14 +68,14 @@ const RoomPage: React.FC = () => {
   }, [roomData]);
 
   const handleCursorPosition = () => {
-    if (codeMirrorRef.current) {
+    if (codeMirrorRef.current && roomData?.code !== "") {
       const cursor = codeMirrorRef.current.view.state.selection.ranges[0].from;
       return cursor;
     }
   };
 
   const handleRestoreCursorPosition = (position: number) => {
-    if (codeMirrorRef.current) {
+    if (codeMirrorRef.current && roomData?.code !== "") {
       const view = codeMirrorRef.current.view;
 
       view.dispatch({ selection: { anchor: position } });
