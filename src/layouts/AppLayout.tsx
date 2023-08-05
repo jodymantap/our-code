@@ -61,7 +61,7 @@ const ChildrenContainer = styled.div`
 const AppLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <ThemeProvider theme={{}}>
-      <Toaster />
+      <Toaster position="bottom-center" />
       <GlobalStyle />
       <BackgroundContainer />
       <NavbarComponent />
