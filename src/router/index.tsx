@@ -7,6 +7,7 @@ import HomePage from "../pages/HomePage";
 import RoomPage from "../pages/RoomPage";
 import GuardedRoute from "../components/GuardedRoute";
 import LoadingComponent from "../components/LoadingComponent";
+import NotFound from "../pages/NotFound";
 
 function RouterPage() {
   const { userInfo } = useAuth();
@@ -63,6 +64,8 @@ function RouterPage() {
         >
           <Route path="/room/:roomID" element={<RoomPage />} />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
