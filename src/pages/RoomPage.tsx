@@ -5,6 +5,7 @@ import { dracula } from "@uiw/codemirror-theme-dracula";
 import CodeMirror from "@uiw/react-codemirror";
 import useRoom from "../composables/useRoom";
 import usePageTitle from "../composables/usePageTitle";
+import EditorHeader from "../components/EditorHeader";
 
 const RoomPage: React.FC = () => {
   const { roomID } = useParams();
@@ -126,6 +127,7 @@ const RoomPage: React.FC = () => {
 
   return (
     <>
+      <EditorHeader roomData={roomData} />
       <CodeMirror
         ref={codeMirrorRef}
         value={roomData?.code || ""}
