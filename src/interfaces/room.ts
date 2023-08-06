@@ -11,5 +11,7 @@ export interface RoomModel {
   room_name: string | null;
   room_member: Member[];
   code: string | null;
+  latest_changes_length?: number;
+  latest_cursor_position?: number;
   created_at?: FieldValue;
 }

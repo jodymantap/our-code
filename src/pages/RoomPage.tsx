@@ -11,9 +11,12 @@ const RoomPage: React.FC = () => {
   const { roomData, enterRoom, updateCode, leaveRoom } = useRoom();
   usePageTitle(`Our Code - Room`);
 
-  type DebouncedFn = (args: string) => void;
+  type DebouncedFn = (value: string, length: number, cursor: number) => void;
 
-  const debouncedCodeChanges = useRef<(value: string) => void>();
+  const debouncedCodeChanges =
+    useRef<
+      (value: string, changesLength: number, latestCursorPos: number) => void
+    >();
   const prevRoomID = useRef<string | undefined>(roomID);
   const prevUpdateCode = useRef<typeof updateCode | undefined>(updateCode);
   const prevEnterRoom = useRef<typeof enterRoom | undefined>(enterRoom);
@@ -22,33 +25,48 @@ const RoomPage: React.FC = () => {
   const [cursor, setCursor] = useState<number>(0);
 
   const handleOnChange = (value: string) => {
-    const cursorPosition = handleCursorPosition();
-    setCursor(cursorPosition);
-    debouncedCodeChanges.current?.(value);
+    if (roomData?.code) {
+      const cursorPosition = handleCursorPosition();
+      const length = value.length - roomData.code.length;
+      debouncedCodeChanges.current?.(value, length, cursorPosition);
+      setCursor(cursorPosition);
+    }
   };
 
   useEffect(() => {
     const debounce = (fn: DebouncedFn, delay: number) => {
       let timer: ReturnType<typeof setTimeout> | null = null;
-      return (value: string) => {
+      return (
+        value: string,
+        changesLength: number,
+        latestCursorPos: number
+      ) => {
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
-          fn(value);
+          fn(value, changesLength, latestCursorPos);
           timer = null;
         }, delay);
       };
     };
 
-    debouncedCodeChanges.current = debounce((value: string) => {
-      prevUpdateCode
-        .current?.(value, prevRoomID.current as string)
-        .then((response) => {
-          return response;
-        })
-        .catch((err) => {
-          throw err;
-        });
-    }, 500);
+    debouncedCodeChanges.current = debounce(
+      (value: string, changesLength: number, latestCursorPos: number) => {
+        prevUpdateCode
+          .current?.(
+            value,
+            prevRoomID.current as string,
+            changesLength,
+            latestCursorPos
+          )
+          .then((response) => {
+            return response;
+          })
+          .catch((err) => {
+            throw err;
+          });
+      },
+      500
+    );
   }, []);
 
   useEffect(() => {
@@ -69,7 +87,8 @@ const RoomPage: React.FC = () => {
 
   const handleCursorPosition = () => {
     if (codeMirrorRef.current && roomData?.code !== "") {
-      const cursor = codeMirrorRef.current.view.state.selection.ranges[0].from;
+      const cursor =
+        codeMirrorRef.current.view?.state?.selection?.ranges[0].from;
       return cursor;
     }
   };
@@ -78,7 +97,19 @@ const RoomPage: React.FC = () => {
     if (codeMirrorRef.current && roomData?.code !== "") {
       const view = codeMirrorRef.current.view;
 
-      view.dispatch({ selection: { anchor: position } });
+      if (
+        roomData?.latest_cursor_position &&
+        roomData.latest_changes_length &&
+        roomData.latest_cursor_position < cursor
+      ) {
+        view.dispatch({
+          selection: { anchor: position + roomData.latest_changes_length },
+        });
+      } else {
+        view.dispatch({
+          selection: { anchor: position },
+        });
+      }
       view.focus();
     }
   };

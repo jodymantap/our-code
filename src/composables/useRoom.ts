@@ -114,10 +114,19 @@ const useRoom = () => {
     dispatch({ type: "PUSH_MEMBER", payload: [] });
   };
 
-  const updateCode = async (code: string, roomID: string) => {
+  const updateCode = async (
+    code: string,
+    roomID: string,
+    changesLength: number,
+    latestCursorPos: number
+  ) => {
     const roomReference = doc(db, "coderoom", roomID);
     try {
-      const response = await updateDoc(roomReference, { code: code });
+      const response = await updateDoc(roomReference, {
+        code: code,
+        latest_changes_length: changesLength,
+        latest_cursor_position: latestCursorPos,
+      });
       return response;
     } catch (err) {
       console.log(err);
