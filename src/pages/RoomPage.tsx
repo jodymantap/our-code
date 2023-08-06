@@ -111,7 +111,6 @@ const RoomPage: React.FC = () => {
         });
         setCursor(finalCursorPos);
       } else {
-        console.log("goes here");
         const newCursorPos = position;
         const maxCursorPos = roomData.code.length;
         const finalCursorPos = Math.min(newCursorPos, maxCursorPos);
