@@ -94,7 +94,7 @@ const RoomPage: React.FC = () => {
   };
 
   const handleRestoreCursorPosition = (position: number) => {
-    if (codeMirrorRef.current && roomData?.code !== "") {
+    if (codeMirrorRef.current && roomData?.code && roomData.code.length) {
       const view = codeMirrorRef.current.view;
 
       if (
@@ -102,13 +102,24 @@ const RoomPage: React.FC = () => {
         roomData.latest_changes_length &&
         roomData.latest_cursor_position < cursor
       ) {
+        const newCursorPos = position + roomData.latest_changes_length;
+        const maxCursorPos = roomData.code.length;
+        const finalCursorPos = Math.min(newCursorPos, maxCursorPos);
+
         view.dispatch({
-          selection: { anchor: position + roomData.latest_changes_length },
+          selection: { anchor: finalCursorPos },
         });
+        setCursor(finalCursorPos);
       } else {
+        console.log("goes here");
+        const newCursorPos = position;
+        const maxCursorPos = roomData.code.length;
+        const finalCursorPos = Math.min(newCursorPos, maxCursorPos);
+
         view.dispatch({
-          selection: { anchor: position },
+          selection: { anchor: finalCursorPos },
         });
+        setCursor(finalCursorPos);
       }
       view.focus();
     }
