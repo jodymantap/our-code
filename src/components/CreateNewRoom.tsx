@@ -75,6 +75,7 @@ const CreateNewRoom: React.FC<ComponentProps> = ({
       .string()
       .required("Room Name is required")
       .matches(/^[a-zA-Z0-9]+$/, "Invalid Room Name format")
+      .max(25, "Room Name is too long")
       .label("Room Name"),
   });
   return (
