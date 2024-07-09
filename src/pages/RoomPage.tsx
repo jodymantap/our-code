@@ -26,12 +26,10 @@ const RoomPage: React.FC = () => {
   const [cursor, setCursor] = useState<number>(0);
 
   const handleOnChange = (value: string) => {
-    if (roomData?.code) {
-      const cursorPosition = handleCursorPosition();
-      const length = value.length - roomData.code.length;
-      debouncedCodeChanges.current?.(value, length, cursorPosition);
-      setCursor(cursorPosition);
-    }
+    const cursorPosition = handleCursorPosition();
+    const length = value.length - (roomData?.code?.length || 0);
+    debouncedCodeChanges.current?.(value, length, cursorPosition);
+    setCursor(cursorPosition);
   };
 
   useEffect(() => {
