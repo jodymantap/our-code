@@ -26,7 +26,7 @@ const RoomPage: React.FC = () => {
   const [cursor, setCursor] = useState<number>(0);
 
   const handleOnChange = (value: string) => {
-    const cursorPosition = handleCursorPosition();
+    const cursorPosition = handleCursorPosition() ?? 0; // Ensure cursorPosition is never undefined
     const length = value.length - (roomData?.code?.length || 0);
     debouncedCodeChanges.current?.(value, length, cursorPosition);
     setCursor(cursorPosition);
@@ -42,7 +42,8 @@ const RoomPage: React.FC = () => {
       ) => {
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
-          fn(value, changesLength, latestCursorPos);
+          const validLatestCursorPos = latestCursorPos ?? 0; // Ensure latestCursorPos is never undefined
+          fn(value, changesLength, validLatestCursorPos);
           timer = null;
         }, delay);
       };
@@ -55,7 +56,7 @@ const RoomPage: React.FC = () => {
             value,
             prevRoomID.current as string,
             changesLength,
-            latestCursorPos
+            latestCursorPos ?? 0 // Ensure latestCursorPos is never undefined
           )
           .then((response) => {
             return response;
@@ -87,9 +88,10 @@ const RoomPage: React.FC = () => {
   const handleCursorPosition = () => {
     if (codeMirrorRef.current && roomData?.code !== "") {
       const cursor =
-        codeMirrorRef.current.view?.state?.selection?.ranges[0].from;
+        codeMirrorRef.current.view?.state?.selection?.ranges[0]?.from;
       return cursor;
     }
+    return 0; // Default cursor position if undefined
   };
 
   const handleRestoreCursorPosition = (position: number) => {
